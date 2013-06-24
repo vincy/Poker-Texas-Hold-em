@@ -14,7 +14,7 @@ class Hold_Hem
     
     public function __construct($players)
     {
-      $this->createDeck()->shuffle()->getHoleCards($players)->getShowdown()->evaluateHands()->getWinners();
+      $this->createDeck()->shuffle()->createHoleCards($players)->createShowdown()->evaluateHands()->createWinners();
     }
     
     public function get()
@@ -27,8 +27,28 @@ class Hold_Hem
         );
         return $array;
     }
+    
+    public function getHoleCards()
+    {
+       return $this->hole_cards;
+    }
+    
+    public function getShowdown()
+    {
+       return $this->showdown;
+    }
+    
+    public function getWinningHands()
+    {
+       return $this->winning_hands;
+    }
+    
+    public function getWinners()
+    {
+       return $this->winners;
+    }
 
-    public function createDeck()
+    protected function createDeck()
     {
         $numbers = array('A', 2, 3, 4, 5, 6, 7, 8, 9, 'T', 'J', 'Q', 'K');
         $suites = array('h', 'd', 'c', 's');
@@ -38,7 +58,7 @@ class Hold_Hem
         return $this;
     }
 
-    public function shuffle()
+    protected function shuffle()
     {
         $times = 3;
         while($times--)
@@ -46,7 +66,7 @@ class Hold_Hem
         return $this;
     }
 
-    public function getHoleCards($players)
+    protected function createHoleCards($players)
     {
         $this->hole_cards = array();
         $times = 2;
@@ -56,7 +76,7 @@ class Hold_Hem
         return $this;
     }
 
-    public function getShowdown()
+    protected function createShowdown()
     {
         $this->fold = array();
         $this->showdown = array();
@@ -72,7 +92,7 @@ class Hold_Hem
         return $this;
     }
 
-    protected function decryptHand($hand)
+    public function decryptHand($hand)
     {
         $to_change = array('T', 'J', 'Q', 'K', 'A');
         $change = array(10, 11, 12, 13, 14);
@@ -84,7 +104,7 @@ class Hold_Hem
         return $hand;
     }
 
-    protected function cryptHand($hand)
+    public function cryptHand($hand)
     {
         $to_change = array(10, 11, 12, 13, 14);
         $change = array('T', 'J', 'Q', 'K', 'A');
@@ -101,14 +121,14 @@ class Hold_Hem
         return $hand;
     }
 
-    protected function onlyNumbers($hand)
+    public function onlyNumbers($hand)
     {
         foreach($hand as &$card)
             $card = substr($card, 0, -1);
         return $hand;
     }
 
-    protected function onlySuits($hand)
+    public function onlySuits($hand)
     {
         foreach($hand as &$card)
             $card = substr($card, -1);
@@ -373,7 +393,7 @@ class Hold_Hem
       return false;
     }
     
-    public function evaluateHands()
+    protected function evaluateHands()
     {
        foreach($this->hole_cards as $player => $hole_card)
         {
@@ -385,7 +405,7 @@ class Hold_Hem
         return $this;
     }
     
-    public function getWinners()
+    protected function createWinners()
     {
        $max_point = max($this->players_points);
        $tmp_winners = array();
